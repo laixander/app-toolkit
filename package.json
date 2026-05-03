@@ -1,0 +1,30 @@
+{
+    "name": "app-toolkit",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare",
+        "lint": "eslint .",
+        "typecheck": "nuxt typecheck"
+    },
+    "dependencies": {
+        "@iconify-json/lucide": "^1.2.104",
+        "@iconify-json/simple-icons": "^1.2.80",
+        "@internationalized/date": "^3.12.1",
+        "@nuxt/ui": "^4.7.0",
+        "@vueuse/core": "^14.3.0",
+        "exceljs": "^4.4.0",
+        "nuxt": "^4.4.2",
+        "tailwindcss": "^4.2.4"
+    },
+    "devDependencies": {
+        "@nuxt/eslint": "^1.15.2",
+        "eslint": "^10.2.1",
+        "typescript": "^6.0.3",
+        "vue-tsc": "^3.2.7"
+    },
+    "packageManager": "pnpm@10.33.2"
+}
