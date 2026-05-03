@@ -198,12 +198,38 @@
             </section>
         </div>
     </UPage>
+
+    <UDrawer v-model:open="isDrawerOpen" direction="right" inset title="Application Logs"
+        description="View real-time application events and status." :ui="{ container: 'sm:py-6 sm:pr-8' }">
+        <template #body>
+            <div class="space-y-4">
+                <div class="flex items-center gap-2 text-sm text-muted-foreground bg-neutral-100 dark:bg-neutral-800 p-3 rounded-lg border border-neutral-200 dark:border-neutral-700"
+                    v-for="i in 3" :key="i">
+                    <UIcon name="i-lucide-info" class="size-4" />
+                    <span>System event {{ i }}: Application initialized successfully.</span>
+                </div>
+            </div>
+        </template>
+    </UDrawer>
 </template>
 <script setup lang="ts">
+definePageMeta({
+    title: 'Clockify Exporter',
+    headerActionLabel: 'History',
+    headerActionIcon: 'i-lucide-history'
+})
+
+const events = useEvents()
+const isDrawerOpen = ref(false)
+events.on('viewLogs', () => {
+    isDrawerOpen.value = true
+})
+
 import { ref, computed, watch, shallowRef, useTemplateRef } from 'vue'
 import ExcelJS from 'exceljs'
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 import { DateFormatter, getLocalTimeZone, today, Time, type CalendarDate } from '@internationalized/date'
+
 
 interface Workspace {
     id: string

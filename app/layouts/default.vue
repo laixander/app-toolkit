@@ -15,20 +15,32 @@ const isCollapsed = computed(() => collapsible.value === 'icon' && !open.value)
 
 const items: NavigationMenuItem[] = [
     {
-        label: 'Home',
-        icon: 'i-lucide-house',
+        label: 'Clockify',
+        icon: 'i-lucide-timer',
         active: true
     },
     {
-        label: 'Inbox',
-        icon: 'i-lucide-inbox',
-        badge: '4'
+        label: 'Coming Soon',
+        icon: 'i-lucide-construction',
+        badge: 'Soon'
     },
     {
-        label: 'Contacts',
-        icon: 'i-lucide-users'
+        label: 'UI Kit',
+        icon: 'i-lucide-blocks',
+        badge: 'Soon'
     }
 ]
+
+const route = useRoute()
+const pageTitle = computed(() => route.meta.title as string)
+
+const headerActionLabel = computed(() => route.meta.headerActionLabel as string || 'View Logs')
+const headerActionIcon = computed(() => route.meta.headerActionIcon as string || 'i-lucide-list-checks')
+
+const events = useEvents()
+
+
+
 </script>
 
 <template>
@@ -63,6 +75,12 @@ const items: NavigationMenuItem[] = [
             ]">
                 <UButton :icon="side === 'left' ? 'i-lucide-panel-left' : 'i-lucide-panel-right'" color="neutral"
                     variant="ghost" aria-label="Toggle sidebar" @click="open = !open" />
+                <!-- setup title in page, not here -->
+                <h1 class="font-bold">{{ pageTitle }}</h1>
+                <div class="ml-auto">
+                    <UButton :label="headerActionLabel" :icon="headerActionIcon" color="neutral" variant="soft"
+                        size="sm" @click="events.emit('viewLogs')" />
+                </div>
             </div>
 
             <div class="flex-1 p-4 overflow-y-auto">
