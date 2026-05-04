@@ -34,8 +34,27 @@ const items: NavigationMenuItem[] = [
 const route = useRoute()
 const pageTitle = computed(() => route.meta.title as string)
 
-const headerActionLabel = computed(() => route.meta.headerActionLabel as string || 'View Logs')
-const headerActionIcon = computed(() => route.meta.headerActionIcon as string || 'i-lucide-list-checks')
+interface HeaderAction {
+    label: string
+    icon: string
+    event?: string
+    color?: string
+}
+
+const headerActions = computed(() => {
+    const metaActions = route.meta.headerActions as HeaderAction[]
+    if (metaActions && Array.isArray(metaActions)) return metaActions
+
+    // Fallback for single action backward compatibility
+    if (route.meta.headerActionLabel) {
+        return [{
+            label: route.meta.headerActionLabel as string,
+            icon: route.meta.headerActionIcon as string || 'i-lucide-list-checks',
+            event: 'viewLogs'
+        }]
+    }
+    return []
+})
 
 const events = useEvents()
 
@@ -77,9 +96,10 @@ const events = useEvents()
                     variant="ghost" aria-label="Toggle sidebar" @click="open = !open" />
                 <!-- setup title in page, not here -->
                 <h1 class="font-bold">{{ pageTitle }}</h1>
-                <div class="ml-auto">
-                    <UButton :label="headerActionLabel" :icon="headerActionIcon" color="neutral" variant="soft"
-                        size="sm" @click="events.emit('viewLogs')" />
+                <div class="ml-auto flex items-center gap-2">
+                    <UButton v-for="(action, index) in headerActions" :key="index" :label="action.label"
+                        :icon="action.icon" :color="(action.color as any) || 'neutral'" variant="soft" size="sm"
+                        @click="action.event ? events.emit(action.event) : null" />
                 </div>
             </div>
 
