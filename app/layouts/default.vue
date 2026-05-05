@@ -13,23 +13,31 @@ const open = ref(true)
 // Derive collapsed state for NavigationMenu
 const isCollapsed = computed(() => collapsible.value === 'icon' && !open.value)
 
-const items: NavigationMenuItem[] = [
-    {
-        label: 'Clockify',
-        icon: 'i-lucide-timer',
-        active: true
-    },
-    {
-        label: 'Coming Soon',
-        icon: 'i-lucide-construction',
-        badge: 'Soon'
-    },
-    {
-        label: 'UI Kit',
-        icon: 'i-lucide-blocks',
-        badge: 'Soon'
-    }
-]
+const items = ref<NavigationMenuItem[]>(
+    [
+        {
+            label: 'Clockify',
+            icon: 'i-lucide-timer',
+            active: true
+        },
+        {
+            label: 'Coming Soon',
+            icon: 'i-lucide-construction',
+            badge: 'Soon'
+        },
+        {
+            label: 'UI Kit',
+            icon: 'i-lucide-blocks',
+            children: [
+                {
+                    label: 'Table',
+                    icon: 'i-lucide-table',
+                    to: '/table'
+                },
+            ]
+        }
+    ]
+)
 
 const route = useRoute()
 const pageTitle = computed(() => route.meta.title as string)
