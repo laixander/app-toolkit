@@ -5,6 +5,7 @@ interface Props {
     confirmLabel?: string
     cancelLabel?: string
     confirmColor?: any
+}
 
 const props = withDefaults(defineProps<Props>(), {
     title: 'Are you sure?',
