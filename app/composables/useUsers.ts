@@ -4,6 +4,7 @@ const STORAGE_KEY = 'demo-users'
 export const useUsers = () => {
   const users = useState<User[]>('users', () => [])
   const isLoading = useState('users-loading', () => false)
+  const isHydrated = ref(false)
 
   const load = () => {
     if (import.meta.server) return
@@ -25,15 +26,19 @@ export const useUsers = () => {
   if (import.meta.client) {
     onMounted(() => {
       load()
+      isHydrated.value = true
     })
   }
+
+  const isPending = computed(() => !isHydrated.value || isLoading.value)
 
   return {
     users,
     load,
     save,
     clear,
-    isLoading
+    isLoading,
+    isPending
   }
 }
 

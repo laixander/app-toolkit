@@ -11,6 +11,8 @@ export interface HeaderAction {
   icon: string
   event?: string
   color?: string
+  variant?: string
+  size?: string
 }
 
 export interface AppLog {

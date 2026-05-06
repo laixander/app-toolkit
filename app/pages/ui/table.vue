@@ -8,14 +8,14 @@ import ConfirmationModal from '~/components/ConfirmationModal.vue'
 definePageMeta({
     title: 'Table UI',
     headerActions: [
-        { label: 'Add User', icon: 'i-lucide-user-plus', event: 'addUser', color: 'primary' },
+        { label: 'Add User', icon: 'i-lucide-user-plus', event: 'addUser', color: 'primary', variant: 'solid', size: 'md' },
     ]
 })
 
 const UButton = resolveComponent('UButton')
 const UBadge = resolveComponent('UBadge')
 
-const { users, save, isLoading: pending } = useUsers()
+const { users, save, isPending: pending } = useUsers()
 const events = useEvents()
 const overlay = useOverlay()
 const userModal = overlay.create(UserModal)
@@ -149,7 +149,18 @@ const columns: TableColumn<User>[] = [
 </script>
 
 <template>
-    <UTable :loading="pending" loading-color="primary" loading-animation="carousel" :data="users" :columns="columns"
-        class="flex-1" />
+    <UTable :data="users" :columns="columns"
+        class="flex-1" :ui="{ root: 'border-1 border-default rounded-xl bg-muted/50' }">
+        <template #empty>
+            <Empty :loading="pending" title="No users found"
+                description="Your user database is currently empty. Click the 'Deploy Demo Data' FAB button or add one manually."
+                icon="i-lucide-users">
+                <template #action>
+                    <UButton label="Add First User" icon="i-lucide-user-plus" color="primary" size="lg"
+                        @click="events.emit('addUser')" />
+                </template>
+            </Empty>
+        </template>
+    </UTable>
     <UserModal v-model:open="isAddUserOpen" @submit="handleAddUser" />
 </template>

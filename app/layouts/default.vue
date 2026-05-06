@@ -54,6 +54,9 @@ const headerActions = computed(() => {
         return [{
             label: route.meta.headerActionLabel as string,
             icon: route.meta.headerActionIcon as string || 'i-lucide-list-checks',
+            color: route.meta.headerActionColor as string,
+            variant: route.meta.headerActionVariant as string,
+            size: route.meta.headerActionSize as string,
             event: 'viewLogs'
         }]
     }
@@ -102,7 +105,8 @@ const events = useEvents()
                 <h1 class="font-bold">{{ pageTitle }}</h1>
                 <div class="ml-auto flex items-center gap-2">
                     <UButton v-for="(action, index) in headerActions" :key="index" :label="action.label"
-                        :icon="action.icon" :color="(action.color as any) || 'neutral'" variant="soft" size="sm"
+                        :icon="action.icon" :color="(action.color as any) || 'neutral'"
+                        :variant="(action.variant as any) || 'soft'" :size="(action.size as any) || 'sm'"
                         @click="action.event ? events.emit(action.event) : null" />
                 </div>
             </div>
