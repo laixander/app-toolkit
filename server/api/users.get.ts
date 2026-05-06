@@ -1,12 +1,8 @@
-import fs from 'node:fs/promises'
-import path from 'node:path'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
 
-export default defineEventHandler(async () => {
-    const filePath = path.resolve('server/data/users.json')
-    try {
-        const data = await fs.readFile(filePath, 'utf-8')
-        return JSON.parse(data)
-    } catch (e) {
-        return []
-    }
+export default defineEventHandler(() => {
+  const filePath = resolve('server/data/users.json')
+  const data = readFileSync(filePath, 'utf-8')
+  return JSON.parse(data)
 })

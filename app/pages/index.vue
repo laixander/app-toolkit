@@ -68,7 +68,6 @@ import ExcelJS from 'exceljs'
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 import { DateFormatter, getLocalTimeZone, today, Time, type CalendarDate } from '@internationalized/date'
 
-
 interface Workspace {
     id: string
     name: string
@@ -82,7 +81,6 @@ interface TimeEntry {
     description: string
     timeInterval: { start: string; end: string }
 }
-
 const apiKey = ref('')
 const workspaces = ref<Workspace[]>([])
 const selectedWorkspace = ref<Workspace | null>(null)

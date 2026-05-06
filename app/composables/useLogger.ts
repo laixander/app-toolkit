@@ -1,11 +1,6 @@
 import { useStorage } from '@vueuse/core'
 
-export interface AppLog {
-    id: string
-    timestamp: string
-    level: 'info' | 'warn' | 'error'
-    message: string
-}
+import type { AppLog } from '~/types'
 
 export const useLogger = () => {
     const logs = useStorage<AppLog[]>('app-logs', [])

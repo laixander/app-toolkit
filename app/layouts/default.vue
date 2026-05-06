@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem, SidebarProps } from '@nuxt/ui'
+import type { HeaderAction } from '~/types'
 
 defineProps<Pick<SidebarProps, 'variant' | 'collapsible' | 'side'>>()
 
@@ -18,7 +19,7 @@ const items = ref<NavigationMenuItem[]>(
         {
             label: 'Clockify',
             icon: 'i-lucide-timer',
-            active: true
+            to: '/'
         },
         {
             label: 'Coming Soon',
@@ -28,11 +29,12 @@ const items = ref<NavigationMenuItem[]>(
         {
             label: 'UI Kit',
             icon: 'i-lucide-blocks',
+            defaultOpen: true,
             children: [
                 {
                     label: 'Table',
                     icon: 'i-lucide-table',
-                    to: '/table'
+                    to: '/ui/table'
                 },
             ]
         }
@@ -42,12 +44,6 @@ const items = ref<NavigationMenuItem[]>(
 const route = useRoute()
 const pageTitle = computed(() => route.meta.title as string)
 
-interface HeaderAction {
-    label: string
-    icon: string
-    event?: string
-    color?: string
-}
 
 const headerActions = computed(() => {
     const metaActions = route.meta.headerActions as HeaderAction[]
@@ -115,5 +111,7 @@ const events = useEvents()
                 <slot />
             </div>
         </div>
+
+        <DemoFab />
     </div>
 </template>
