@@ -1,17 +1,28 @@
+// ============================================================================
+// Composable: useDemoSeeder
+// ============================================================================
+// Handles mass-seeding and resetting of the application data for demo purposes.
+
 export const useDemoSeeder = () => {
-  const { save, clear } = useUsers()
+    const { setUsers, clear } = useUsers()
 
-  const seedAll = async () => {
-    const data = await $fetch('/api/users')
-    save(data as any[])
-  }
+    /**
+     * Fetch mock data from API and populate local storage
+     */
+    const seedAll = async () => {
+        const data = await $fetch('/api/users')
+        setUsers(data as any[])
+    }
 
-  const resetAll = async () => {
-    clear()
-  }
+    /**
+     * Clear all local storage data
+     */
+    const resetAll = async () => {
+        clear()
+    }
 
-  return {
-    seedAll,
-    resetAll
-  }
+    return {
+        seedAll,
+        resetAll
+    }
 }

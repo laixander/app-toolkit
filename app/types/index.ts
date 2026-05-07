@@ -1,3 +1,11 @@
+// ============================================================================
+// Types Definition
+// ============================================================================
+// Contains all global interfaces and types used across the application.
+
+/**
+ * Represents a system user.
+ */
 export interface User {
   id: number
   name: string
@@ -5,7 +13,9 @@ export interface User {
   role: string
 }
 
-
+/**
+ * Represents an actionable item in headers.
+ */
 export interface HeaderAction {
   label: string
   icon: string
@@ -15,6 +25,9 @@ export interface HeaderAction {
   size?: string
 }
 
+/**
+ * Represents an application log entry.
+ */
 export interface AppLog {
   id: string
   message: string

@@ -1,50 +1,76 @@
 <script setup lang="ts">
+// ============================================================================
+// Imports
+// ============================================================================
 import type { NavigationMenuItem, SidebarProps } from '@nuxt/ui'
 import type { HeaderAction } from '~/types'
 
+// ============================================================================
+// Props
+// ============================================================================
 defineProps<Pick<SidebarProps, 'variant' | 'collapsible' | 'side'>>()
 
+// ============================================================================
+// State & Configuration
+// ============================================================================
 // Default variant to inset
 const variant = ref<SidebarProps['variant']>('inset')
+
 // Default collapsible to icon
 const collapsible = ref<SidebarProps['collapsible']>('icon')
 
+// Sidebar toggle state
 const open = ref(true)
 
-// Derive collapsed state for NavigationMenu
+// Sidebar navigation items mapping
+const items = ref<NavigationMenuItem[]>([
+    {
+        label: 'Clockify',
+        icon: 'i-lucide-timer',
+        to: '/'
+    },
+    {
+        label: 'Coming Soon',
+        icon: 'i-lucide-construction',
+        badge: 'Soon'
+    },
+    {
+        label: 'UI Kit',
+        icon: 'i-lucide-blocks',
+        defaultOpen: true,
+        children: [
+            {
+                label: 'Table',
+                icon: 'i-lucide-table',
+                to: '/ui/table'
+            },
+        ]
+    }
+])
+
+// ============================================================================
+// Composables
+// ============================================================================
+const route = useRoute()
+const events = useEvents()
+
+// ============================================================================
+// Computed Properties
+// ============================================================================
+
+/**
+ * Derive collapsed state for NavigationMenu based on the sidebar's open state
+ */
 const isCollapsed = computed(() => collapsible.value === 'icon' && !open.value)
 
-const items = ref<NavigationMenuItem[]>(
-    [
-        {
-            label: 'Clockify',
-            icon: 'i-lucide-timer',
-            to: '/'
-        },
-        {
-            label: 'Coming Soon',
-            icon: 'i-lucide-construction',
-            badge: 'Soon'
-        },
-        {
-            label: 'UI Kit',
-            icon: 'i-lucide-blocks',
-            defaultOpen: true,
-            children: [
-                {
-                    label: 'Table',
-                    icon: 'i-lucide-table',
-                    to: '/ui/table'
-                },
-            ]
-        }
-    ]
-)
-
-const route = useRoute()
+/**
+ * Extracts the page title dynamically from the current route's meta tags
+ */
 const pageTitle = computed(() => route.meta.title as string)
 
-
+/**
+ * Parses and normalizes the header actions defined in the route meta
+ */
 const headerActions = computed(() => {
     const metaActions = route.meta.headerActions as HeaderAction[]
     if (metaActions && Array.isArray(metaActions)) return metaActions
@@ -62,11 +88,6 @@ const headerActions = computed(() => {
     }
     return []
 })
-
-const events = useEvents()
-
-
-
 </script>
 
 <template>
@@ -111,7 +132,10 @@ const events = useEvents()
                 </div>
             </div>
 
-            <div class="flex-1 p-4 overflow-y-auto">
+            <div :class="[
+                'flex-1',
+                route.meta.isTable ? 'flex flex-col overflow-hidden min-h-0' : 'p-4 overflow-y-auto'
+            ]">
                 <slot />
             </div>
         </div>

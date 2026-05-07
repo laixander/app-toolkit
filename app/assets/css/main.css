@@ -15,3 +15,10 @@
     mask-position: center;
     mask-repeat: no-repeat;
 }
+
+@layer utilities {
+
+    .scrollbar {
+        @apply [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-neutral-200 dark:[&::-webkit-scrollbar-track]:bg-neutral-100/5 [&::-webkit-scrollbar-thumb]:bg-neutral-400 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-400/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500
+    }
+}

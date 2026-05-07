@@ -1,95 +1,107 @@
 <script setup lang="ts">
-import { h, resolveComponent } from 'vue'
+// ============================================================================
+// Imports
+// ============================================================================
+import { h, ref, useTemplateRef } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
+import { useOverlay } from '#imports'
+import { UButton, UBadge } from '#components'
+
+// Types
 import type { User } from '~/types'
+
+// Components
 import UserModal from '~/components/UserModal.vue'
 import ConfirmationModal from '~/components/ConfirmationModal.vue'
 
+// ============================================================================
+// Page Configuration
+// ============================================================================
 definePageMeta({
     title: 'Table UI',
+    isTable: true,
     headerActions: [
         { label: 'Add User', icon: 'i-lucide-user-plus', event: 'addUser', color: 'primary', variant: 'solid', size: 'md' },
     ]
 })
 
-const UButton = resolveComponent('UButton')
-const UBadge = resolveComponent('UBadge')
-
-const { users, save, isPending: pending } = useUsers()
+// ============================================================================
+// Composables & State
+// ============================================================================
+// Services
+const { users, addUser, updateUser, deleteUser, isPending: pending } = useUsers()
 const events = useEvents()
 const overlay = useOverlay()
+
+// Modals
 const userModal = overlay.create(UserModal)
 const confirmModal = overlay.create(ConfirmationModal)
 
+// Local State
 const isAddUserOpen = ref(false)
 
+// ============================================================================
+// Event Listeners
+// ============================================================================
+// Global event listeners (e.g., triggered from header actions)
 events.on('addUser', () => {
     isAddUserOpen.value = true
 })
 
-function handleAddUser(userForm: Omit<User, 'id'>) {
-    const newId = users.value.length > 0 ? Math.max(...users.value.map(u => u.id)) + 1 : 1
-    const newUser = { id: newId, ...userForm }
-    // Add to the beginning of the list
-    save([newUser, ...users.value])
+// ============================================================================
+// Methods
+// ============================================================================
+
+/**
+ * Handle Add User
+ * Submits the form data from the Add User modal.
+ */
+async function handleAddUser(userForm: Omit<User, 'id'>) {
+    await addUser(userForm)
+    isAddUserOpen.value = false
 }
 
+/**
+ * Handle Edit User
+ * Opens the User Modal pre-filled with user data, then prompts for confirmation before saving.
+ */
 function handleEditUser(user: User) {
     userModal.open({
         user,
         title: 'Edit User',
-        onSubmit: (userForm: Omit<User, 'id'>) => {
-            // UserModal closes itself on submit. Now open confirmation.
+        onSubmit: async (userForm: Omit<User, 'id'>) => {
             confirmModal.open({
                 title: 'Confirm Changes',
                 description: `Are you sure you want to save changes to ${userForm.name}?`,
                 confirmLabel: 'Save Changes',
                 confirmColor: 'warning',
-                onConfirm: () => {
-                    const index = users.value.findIndex(u => u.id === user.id)
-                    if (index !== -1) {
-                        const updatedUsers = [...users.value]
-                        updatedUsers[index] = { id: user.id, ...userForm }
-                        save(updatedUsers)
-                    }
-                }
+                onConfirm: () => updateUser(user.id, userForm)
             })
         }
     })
 }
 
+/**
+ * Handle Delete User
+ * Opens a confirmation modal before deleting a user.
+ */
 function handleDeleteUser(user: User) {
     confirmModal.open({
         title: 'Delete User',
         description: `Are you sure you want to delete ${user.name}? This action cannot be undone.`,
         confirmLabel: 'Delete',
         confirmColor: 'error',
-        onConfirm: () => {
-            const updatedUsers = users.value.filter(u => u.id !== user.id)
-            save(updatedUsers)
-        }
+        onConfirm: () => deleteUser(user.id)
     })
 }
 
-function getSortableHeader(label: string) {
-    return ({ column }: any) => {
-        const isSorted = column.getIsSorted()
+// ============================================================================
+// Table Configuration
+// ============================================================================
 
-        return h(UButton, {
-            color: 'neutral',
-            variant: 'ghost',
-            label,
-            icon: isSorted
-                ? isSorted === 'asc'
-                    ? 'i-lucide-arrow-up-narrow-wide'
-                    : 'i-lucide-arrow-down-wide-narrow'
-                : 'i-lucide-arrow-up-down',
-            class: '-mx-2.5',
-            onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
-        })
-    }
-}
-
+/**
+ * Column Definitions
+ */
 const columns: TableColumn<User>[] = [
     {
         accessorKey: 'id',
@@ -110,9 +122,12 @@ const columns: TableColumn<User>[] = [
         accessorKey: 'role',
         header: getSortableHeader('Role'),
         cell: ({ row }) => {
+            const role = row.getValue('role') as string
+            const badgeColor = role === 'Admin' ? 'primary' : role === 'Editor' ? 'secondary' : 'success'
+
             return h(UBadge, {
-                label: `${row.getValue('role')}`,
-                color: `${row.getValue('role') === 'Admin' ? 'primary' : row.getValue('role') === 'Editor' ? 'secondary' : 'success'}`,
+                label: role,
+                color: badgeColor,
                 variant: 'subtle'
             })
         }
@@ -125,9 +140,7 @@ const columns: TableColumn<User>[] = [
             }
         },
         cell: ({ row }) => {
-            return h('div', {
-                class: 'inline-flex gap-2'
-            }, [
+            return h('div', { class: 'inline-flex gap-2' }, [
                 h(UButton, {
                     icon: 'i-lucide-edit',
                     color: 'primary',
@@ -146,11 +159,25 @@ const columns: TableColumn<User>[] = [
         }
     }
 ]
+const table = useTemplateRef('table')
+const globalFilter = ref('')
+const columnVisibility = ref({
+    id: false
+})
 </script>
 
 <template>
-    <UTable :data="users" :columns="columns"
-        class="flex-1" :ui="{ root: 'border-1 border-default rounded-xl bg-muted/50' }">
+    <UPageCard title="Users Table"
+        description="Below is a fully functional table component with CRUD operations. It uses server-side data fetching and Nuxt UI's UTable component. You can add, edit, and delete users, and the table will update in real-time."
+        variant="naked" orientation="horizontal" class="border-b border-default rounded-none p-4">
+        <div class="flex justify-end gap-2 flex-1">
+            <TableGlobalFilter v-model="globalFilter" />
+            <TableColumnToggle :table="table" />
+        </div>
+    </UPageCard>
+
+    <UTable sticky ref="table" :data="users" :columns="columns" :loading="pending"
+        v-model:column-visibility="columnVisibility" v-model:global-filter="globalFilter" class="flex-1 scrollbar">
         <template #empty>
             <Empty :loading="pending" title="No users found"
                 description="Your user database is currently empty. Click the 'Deploy Demo Data' FAB button or add one manually."
@@ -162,5 +189,6 @@ const columns: TableColumn<User>[] = [
             </Empty>
         </template>
     </UTable>
+
     <UserModal v-model:open="isAddUserOpen" @submit="handleAddUser" />
 </template>

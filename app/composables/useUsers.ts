@@ -1,44 +1,132 @@
+// ============================================================================
+// Composable: useUsers
+// ============================================================================
+// Handover Ready Pattern: Abstracts the data fetching and persistence layer.
+// To switch to a real backend, replace localStorage logic with $fetch or useAsyncData.
+
 import type { User } from '~/types'
 
 const STORAGE_KEY = 'demo-users'
+
 export const useUsers = () => {
-  const users = useState<User[]>('users', () => [])
-  const isLoading = useState('users-loading', () => false)
-  const isHydrated = ref(false)
+    // ============================================================================
+    // State
+    // ============================================================================
+    const users = useState<User[]>('users', () => [])
+    const isLoading = useState('users-loading', () => false)
+    const isHydrated = ref(false)
+    const toast = useAppToast()
 
-  const load = () => {
-    if (import.meta.server) return
-    const stored = localStorage.getItem(STORAGE_KEY)
-    users.value = stored ? JSON.parse(stored) : []
-  }
+    const isPending = computed(() => !isHydrated.value || isLoading.value)
 
-  const save = (data: User[]) => {
-    users.value = data
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  }
+    // ============================================================================
+    // Internal Helpers
+    // ============================================================================
+    
+    /**
+     * Simulate network latency for realistic UX.
+     */
+    const simulateLoading = async (ms = 500) => {
+        isLoading.value = true
+        await new Promise(resolve => setTimeout(resolve, ms))
+        isLoading.value = false
+    }
 
-  const clear = () => {
-    users.value = []
-    localStorage.removeItem(STORAGE_KEY)
-  }
+    /**
+     * Save data to reactive state and local storage.
+     */
+    const saveToStorage = (data: User[]) => {
+        users.value = data
+        if (import.meta.client) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+        }
+    }
 
-  // Load on init (client-side), wait for mount to prevent hydration mismatch
-  if (import.meta.client) {
-    onMounted(() => {
-      load()
-      isHydrated.value = true
-    })
-  }
+    // ============================================================================
+    // Initialization
+    // ============================================================================
+    
+    /**
+     * Load initial data from local storage.
+     */
+    const load = () => {
+        if (import.meta.server) return
+        const stored = localStorage.getItem(STORAGE_KEY)
+        users.value = stored ? JSON.parse(stored) : []
+        isHydrated.value = true
+    }
 
-  const isPending = computed(() => !isHydrated.value || isLoading.value)
+    // Initialize on client mount
+    if (import.meta.client && !isHydrated.value) {
+        onMounted(load)
+    }
 
-  return {
-    users,
-    load,
-    save,
-    clear,
-    isLoading,
-    isPending
-  }
+    // ============================================================================
+    // CRUD Operations
+    // ============================================================================
+    
+    /**
+     * Add a new user to the database.
+     */
+    const addUser = async (userForm: Omit<User, 'id'>) => {
+        await simulateLoading()
+        const newId = users.value.length > 0 ? Math.max(...users.value.map(u => u.id)) + 1 : 1
+        const newUser = { id: newId, ...userForm }
+        
+        saveToStorage([newUser, ...users.value])
+        toast.success('User added successfully')
+        return newUser
+    }
+
+    /**
+     * Update an existing user in the database.
+     */
+    const updateUser = async (id: number, userForm: Omit<Partial<User>, 'id'>) => {
+        await simulateLoading()
+        const index = users.value.findIndex(u => u.id === id)
+        if (index !== -1) {
+            const updatedUsers = [...users.value]
+            // We cast to User because we know the spread results in a complete User object
+            updatedUsers[index] = { ...updatedUsers[index], ...userForm } as User
+            saveToStorage(updatedUsers)
+            toast.success('User updated successfully')
+        }
+    }
+
+    /**
+     * Delete a user from the database.
+     */
+    const deleteUser = async (id: number) => {
+        await simulateLoading()
+        saveToStorage(users.value.filter(u => u.id !== id))
+        toast.success('User deleted successfully')
+    }
+
+    /**
+     * Mass assign users (used by demo seeder).
+     */
+    const setUsers = (newUsers: User[]) => {
+        saveToStorage(newUsers)
+    }
+
+    /**
+     * Clear all users from the database.
+     */
+    const clear = () => {
+        users.value = []
+        localStorage.removeItem(STORAGE_KEY)
+        toast.success('User database cleared')
+    }
+
+    return {
+        users,
+        isLoading,
+        isPending,
+        load,
+        addUser,
+        updateUser,
+        deleteUser,
+        setUsers,
+        clear
+    }
 }
-

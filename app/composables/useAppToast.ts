@@ -1,7 +1,15 @@
+// ============================================================================
+// Composable: useAppToast
+// ============================================================================
+// Provides a unified, type-safe interface for application-wide toast notifications.
+
 export const useAppToast = () => {
     const toast = useToast()
 
     return {
+        /**
+         * Display a success notification
+         */
         success: (title: string, description?: string) => {
             toast.add({
                 title,
@@ -10,6 +18,9 @@ export const useAppToast = () => {
                 icon: 'i-lucide-check-circle'
             })
         },
+        /**
+         * Display an error notification
+         */
         error: (title: string, description?: string) => {
             toast.add({
                 title,

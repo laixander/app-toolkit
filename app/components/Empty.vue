@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// ============================================================================
+// Component Definition
+// ============================================================================
 interface Props {
   title?: string
   description?: string
@@ -7,17 +10,19 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-    title: 'No records found',
-    description: 'There is currently no data to display here. Try adjusting your filters or adding new entries.',
+  title: 'No records found',
+  description: 'There is currently no data to display here. Try adjusting your filters or adding new entries.',
   icon: 'i-lucide-folder-open',
   loading: false
 })
 </script>
 
 <template>
-    <div class="flex flex-col items-center justify-center py-16 px-6 text-center w-full h-full min-h-[300px]">
+  <div class="flex flex-col items-center justify-center py-16 px-6 text-center w-full h-full min-h-[300px]">
     
-    <!-- Loading State -->
+    <!-- ========================================== -->
+    <!-- Loading State                              -->
+    <!-- ========================================== -->
     <template v-if="loading">
       <div class="relative flex items-center justify-center mb-6">
         <div class="absolute inset-0 bg-primary/20 blur-xl rounded-full scale-150 animate-pulse"></div>
@@ -33,7 +38,9 @@ withDefaults(defineProps<Props>(), {
       </p>
     </template>
 
-    <!-- Empty State -->
+    <!-- ========================================== -->
+    <!-- Empty State                                -->
+    <!-- ========================================== -->
     <template v-else>
       <!-- Icon Container with Glow Effect -->
       <div class="relative flex items-center justify-center mb-8 group">

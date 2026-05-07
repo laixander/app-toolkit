@@ -1,8 +1,18 @@
 <script setup lang="ts">
+// ============================================================================
+// Composables & State
+// ============================================================================
 const { seedAll, resetAll } = useDemoSeeder()
 const { isLoading } = useUsers()
 const toast = useAppToast()
 
+// ============================================================================
+// Methods
+// ============================================================================
+
+/**
+ * Handle mass seeding of demo data
+ */
 const handleSeed = async () => {
     isLoading.value = true
     try {
@@ -17,6 +27,9 @@ const handleSeed = async () => {
     }
 }
 
+/**
+ * Handle resetting of the demo system
+ */
 const handleReset = async () => {
     isLoading.value = true
     try {
@@ -30,6 +43,9 @@ const handleReset = async () => {
     }
 }
 
+// ============================================================================
+// Configuration
+// ============================================================================
 const items = [
     [
         {
@@ -48,17 +64,22 @@ const items = [
     ]
 ] as any[][]
 
-// Draggable logic — position is offset from bottom-right corner
+// ============================================================================
+// Draggable Logic
+// ============================================================================
 const position = ref({ x: 24, y: 24 })
 const isDragging = ref(false)
 const dragStart = ref({ x: 0, y: 0 })
 const initialPosition = ref({ x: 0, y: 0 })
 const hasMoved = ref(false)
 const fabRef = ref<HTMLElement | null>(null)
-
-// Detect if FAB is on the left or right half of the viewport
 const isOnLeftSide = ref(false)
 
+const dropdownAlign = computed(() => isOnLeftSide.value ? 'start' : 'end')
+
+/**
+ * Detect if FAB is on the left or right half of the viewport
+ */
 const updateSideDetection = () => {
     if (!fabRef.value) return
     const rect = fabRef.value.getBoundingClientRect()
@@ -66,8 +87,9 @@ const updateSideDetection = () => {
     isOnLeftSide.value = fabCenterX < window.innerWidth / 2
 }
 
-const dropdownAlign = computed(() => isOnLeftSide.value ? 'start' : 'end')
-
+/**
+ * Handle mouse down event on the FAB to start dragging
+ */
 const handleMouseDown = (e: MouseEvent) => {
     isDragging.value = true
     dragStart.value = { x: e.clientX, y: e.clientY }
@@ -78,6 +100,9 @@ const handleMouseDown = (e: MouseEvent) => {
     window.addEventListener('mouseup', handleMouseUp)
 }
 
+/**
+ * Update position during drag
+ */
 const handleMouseMove = (e: MouseEvent) => {
     if (!isDragging.value) return
 
@@ -96,12 +121,16 @@ const handleMouseMove = (e: MouseEvent) => {
     updateSideDetection()
 }
 
+/**
+ * End drag
+ */
 const handleMouseUp = () => {
     isDragging.value = false
     window.removeEventListener('mousemove', handleMouseMove)
     window.removeEventListener('mouseup', handleMouseUp)
 }
 
+// Initialize side detection
 onMounted(() => {
     nextTick(updateSideDetection)
 })
