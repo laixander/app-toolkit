@@ -40,6 +40,11 @@ const items = ref<NavigationMenuItem[]>([
         defaultOpen: true,
         children: [
             {
+                label: 'AI Rules',
+                icon: 'i-lucide-scroll-text',
+                to: '/ui/ai-rules'
+            },
+            {
                 label: 'Table',
                 icon: 'i-lucide-table',
                 to: '/ui/table'

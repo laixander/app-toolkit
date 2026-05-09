@@ -49,6 +49,24 @@ const handleReset = async () => {
 const items = [
     [
         {
+            label: 'Landing Page',
+            icon: 'i-lucide-home',
+        },
+        {
+            label: 'Documentation',
+            icon: 'i-lucide-book-open',
+        },
+        {
+            label: 'User Manual',
+            icon: 'i-lucide-book',
+        },
+        {
+            label: 'Roadmap',
+            icon: 'i-lucide-map',
+        },
+    ],
+    [
+        {
             label: 'Deploy Demo Data',
             icon: 'i-lucide-database-zap',
             onSelect: handleSeed
@@ -142,8 +160,8 @@ onMounted(() => {
         right: `${position.x}px`,
     }">
         <!-- Main FAB -->
-        <UDropdownMenu :items="items" :content="{ align: dropdownAlign, side: 'top', sideOffset: 12 }" :ui="{ content: 'w-44' }"
-            :prevent-close="hasMoved">
+        <UDropdownMenu :items="items" :content="{ align: dropdownAlign, side: 'top', sideOffset: 12 }"
+            :ui="{ content: 'w-44' }" :prevent-close="hasMoved">
             <UButton square size="xl" color="primary" :loading="isLoading"
                 class="rounded-full hover:scale-110 active:scale-95 transition-all duration-300 ring-4 ring-primary-500/20 cursor-move"
                 :class="{ 'animate-pulse': isLoading }" @mousedown="handleMouseDown"

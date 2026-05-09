@@ -95,6 +95,23 @@ function handleDeleteUser(user: User) {
     })
 }
 
+/**
+ * Handle Toggle User Status
+ * Opens a confirmation modal before activating/deactivating a user.
+ */
+function handleToggleStatus(user: User) {
+    const isActivating = user.status === 'Inactive'
+    const newStatus = isActivating ? 'Active' : 'Inactive'
+
+    confirmModal.open({
+        title: `${isActivating ? 'Activate' : 'Deactivate'} User`,
+        description: `Are you sure you want to ${isActivating ? 'activate' : 'deactivate'} ${user.name}?`,
+        confirmLabel: isActivating ? 'Activate' : 'Deactivate',
+        confirmColor: isActivating ? 'success' : 'warning',
+        onConfirm: () => updateUser(user.id, { status: newStatus })
+    })
+}
+
 // ============================================================================
 // Table Configuration
 // ============================================================================
@@ -133,6 +150,20 @@ const columns: TableColumn<User>[] = [
         }
     },
     {
+        accessorKey: 'status',
+        header: getSortableHeader('Status'),
+        cell: ({ row }) => {
+            const status = row.getValue('status') as string
+            const badgeColor = status === 'Active' ? 'success' : 'neutral'
+
+            return h(UBadge, {
+                label: status,
+                color: badgeColor,
+                variant: 'subtle'
+            })
+        }
+    },
+    {
         id: 'actions',
         meta: {
             class: {
@@ -141,6 +172,13 @@ const columns: TableColumn<User>[] = [
         },
         cell: ({ row }) => {
             return h('div', { class: 'inline-flex gap-2' }, [
+                h(UButton, {
+                    icon: row.original.status === 'Active' ? 'i-lucide-user-minus' : 'i-lucide-user-check',
+                    color: row.original.status === 'Active' ? 'warning' : 'success',
+                    variant: 'ghost',
+                    size: 'sm',
+                    onClick: () => handleToggleStatus(row.original)
+                }),
                 h(UButton, {
                     icon: 'i-lucide-edit',
                     color: 'primary',
@@ -181,7 +219,8 @@ const columnVisibility = ref({
         <template #empty>
             <Empty :loading="pending" title="No users found"
                 description="Your user database is currently empty. Click the 'Deploy Demo Data' FAB button or add one manually."
-                icon="i-lucide-users">
+                icon="i-lucide-users" loading-title="Retrieving User Database"
+                loading-description="Please wait while we sync the latest user records from our secure vault.">
                 <template #action>
                     <UButton label="Add First User" icon="i-lucide-user-plus" color="primary" size="lg"
                         @click="events.emit('addUser')" />

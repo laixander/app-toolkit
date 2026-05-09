@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-    (e: 'submit', user: { name: string; email: string; role: string }): void
+    (e: 'submit', user: { name: string; email: string; role: string; status: 'Active' | 'Inactive' }): void
     (e: 'cancel'): void
 }>()
 
@@ -30,7 +30,8 @@ const roles = ['Admin', 'Editor', 'Viewer']
 const form = reactive({
     name: props.user?.name || '',
     email: props.user?.email || '',
-    role: props.user?.role || 'Viewer'
+    role: props.user?.role || 'Viewer',
+    status: props.user?.status || 'Active'
 })
 
 // Sync form with props when user changes
@@ -39,6 +40,7 @@ watch(() => props.user, (newVal) => {
         form.name = newVal.name
         form.email = newVal.email
         form.role = newVal.role
+        form.status = newVal.status
     } else {
         resetForm()
     }
@@ -75,6 +77,7 @@ function resetForm() {
     form.name = ''
     form.email = ''
     form.role = 'Viewer'
+    form.status = 'Active'
 }
 </script>
 
@@ -100,6 +103,10 @@ function resetForm() {
 
                     <UFormField label="Role">
                         <USelect v-model="form.role" :items="roles" icon="i-lucide-shield" class="w-full" />
+                    </UFormField>
+
+                    <UFormField label="Status">
+                        <USelect v-model="form.status" :items="['Active', 'Inactive']" icon="i-lucide-activity" class="w-full" />
                     </UFormField>
 
                     <!-- Actions -->
