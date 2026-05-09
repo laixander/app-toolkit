@@ -18,7 +18,7 @@ export const useDemoSeeder = () => {
      * Clear all local storage data
      */
     const resetAll = async () => {
-        clear()
+        clear(true)
     }
 
     return {

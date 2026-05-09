@@ -18,7 +18,7 @@ import ConfirmationModal from '~/components/ConfirmationModal.vue'
 // Page Configuration
 // ============================================================================
 definePageMeta({
-    title: 'Table UI',
+    title: 'CRUD Reference',
     isTable: true,
     headerActions: [
         { label: 'Add User', icon: 'i-lucide-user-plus', event: 'addUser', color: 'primary', variant: 'solid', size: 'md' },
@@ -205,8 +205,8 @@ const columnVisibility = ref({
 </script>
 
 <template>
-    <UPageCard title="Users Table"
-        description="Below is a fully functional table component with CRUD operations. It uses server-side data fetching and Nuxt UI's UTable component. You can add, edit, and delete users, and the table will update in real-time."
+    <UPageCard title="CRUD Reference"
+        description="A standard reference implementation for AI agents to understand CRUD patterns, data tables, and modal-based workflows within this application."
         variant="naked" orientation="horizontal" class="border-b border-default rounded-none p-4">
         <div class="flex justify-end gap-2 flex-1">
             <TableGlobalFilter v-model="globalFilter" />

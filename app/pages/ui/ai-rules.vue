@@ -214,7 +214,10 @@ const utilityPatterns = [
                         </div>
                     </template>
                     <p class="text-xs text-neutral-500">
-                        Use <code class="text-primary">definePageMeta</code> for <code class="text-primary">title</code> and <code class="text-primary">headerActions</code>. Actions automatically render in the layout header.
+                        Use <code class="text-primary">definePageMeta</code> for <code class="text-primary">title</code>
+                        and
+                        <code class="text-primary">headerActions</code>. Actions automatically render in the layout
+                        header.
                     </p>
                 </UCard>
                 <UCard :ui="{ body: 'p-4' }">
@@ -225,7 +228,9 @@ const utilityPatterns = [
                         </div>
                     </template>
                     <p class="text-xs text-neutral-500">
-                        Use <code class="text-primary">useOverlay()</code> to manage modals and drawers programmatically instead of complex local state.
+                        Use <code class="text-primary">useOverlay()</code> to manage modals and drawers programmatically
+                        instead
+                        of complex local state.
                     </p>
                 </UCard>
                 <UCard :ui="{ body: 'p-4' }">
@@ -236,7 +241,9 @@ const utilityPatterns = [
                         </div>
                     </template>
                     <p class="text-xs text-neutral-500">
-                        Use <code class="text-primary">useEvents()</code> for cross-component communication, especially between layout header actions and pages.
+                        Use <code class="text-primary">useEvents()</code> for cross-component communication, especially
+                        between
+                        layout header actions and pages.
                     </p>
                 </UCard>
             </div>
@@ -314,7 +321,8 @@ const utilityPatterns = [
                 <h2 class="text-2xl font-bold">Required Module States</h2>
             </div>
             <div class="flex flex-wrap gap-4">
-                <UBadge v-for="state in requiredStates" :key="state.label" color="neutral" variant="subtle" class="flex gap-2 py-2 px-3">
+                <UBadge v-for="state in requiredStates" :key="state.label" color="neutral" variant="subtle"
+                    class="flex gap-2 py-2 px-3">
                     <UIcon :name="state.icon" class="size-4" />
                     {{ state.label }}
                 </UBadge>
@@ -329,18 +337,18 @@ const utilityPatterns = [
                 <UIcon name="i-lucide-factory" class="size-6 text-primary" />
                 <h2 class="text-2xl font-bold">Module Generation Rules</h2>
             </div>
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col">
                 <div v-for="(step, index) in steps" :key="index" class="flex gap-4">
                     <div class="flex flex-col items-center">
                         <div
-                            class="size-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shrink-0">
+                            class="size-7 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0">
                             {{ index + 1 }}
                         </div>
                         <div v-if="index !== steps.length - 1"
-                            class="w-px flex-1 bg-neutral-200 dark:bg-neutral-800 my-1">
+                            class="w-px flex-1 bg-primary-200 dark:bg-primary-800 my-1">
                         </div>
                     </div>
-                    <div class="pb-6">
+                    <div class="pb-12">
                         <h3 class="font-semibold mb-1">{{ step.title }}</h3>
                         <p class="text-sm text-neutral-600 dark:text-neutral-400">{{ step.description }}</p>
                     </div>
@@ -367,7 +375,7 @@ const utilityPatterns = [
                         <div v-for="rule in namingRules" :key="rule.label"
                             class="p-3 rounded-lg border border-default bg-neutral-50 dark:bg-neutral-900">
                             <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-400">{{ rule.label
-                                }}</span>
+                            }}</span>
                             <p class="text-xs mt-1 font-medium">{{ rule.content }}</p>
                         </div>
                     </div>
@@ -383,7 +391,7 @@ const utilityPatterns = [
                         <div v-for="rule in commentRules" :key="rule.label"
                             class="p-3 rounded-lg border border-default bg-neutral-50 dark:bg-neutral-900">
                             <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-400">{{ rule.label
-                                }}</span>
+                            }}</span>
                             <p class="text-xs mt-1 font-medium">{{ rule.content }}</p>
                         </div>
                     </div>
@@ -400,7 +408,8 @@ const utilityPatterns = [
                 <h2 class="text-2xl font-bold">Performance</h2>
             </div>
             <ul class="space-y-3">
-                <li v-for="rule in performanceRules" :key="rule" class="flex gap-2 text-sm text-neutral-600 dark:text-neutral-400">
+                <li v-for="rule in performanceRules" :key="rule"
+                    class="flex gap-2 text-sm text-neutral-600 dark:text-neutral-400">
                     <UIcon name="i-lucide-check" class="text-primary shrink-0 mt-0.5" />
                     {{ rule }}
                 </li>

@@ -74,7 +74,7 @@ export const useUsers = () => {
         const newUser = { id: newId, ...userForm }
         
         saveToStorage([newUser, ...users.value])
-        toast.success('User added successfully')
+        toast.success('User added successfully', 'The new user has been created and saved.')
         return newUser
     }
 
@@ -89,7 +89,7 @@ export const useUsers = () => {
             // We cast to User because we know the spread results in a complete User object
             updatedUsers[index] = { ...updatedUsers[index], ...userForm } as User
             saveToStorage(updatedUsers)
-            toast.success('User updated successfully')
+            toast.success('User updated successfully', "The user's profile information has been updated.")
         }
     }
 
@@ -99,7 +99,7 @@ export const useUsers = () => {
     const deleteUser = async (id: number) => {
         await simulateLoading()
         saveToStorage(users.value.filter(u => u.id !== id))
-        toast.success('User deleted successfully')
+        toast.success('User deleted successfully', 'The user has been removed from the system.')
     }
 
     /**
@@ -112,10 +112,12 @@ export const useUsers = () => {
     /**
      * Clear all users from the database.
      */
-    const clear = () => {
+    const clear = (quiet = false) => {
         users.value = []
         localStorage.removeItem(STORAGE_KEY)
-        toast.success('User database cleared')
+        if (!quiet) {
+            toast.success('User database cleared', 'All user records have been permanently removed.')
+        }
     }
 
     return {

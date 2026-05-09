@@ -35,7 +35,7 @@ const items = ref<NavigationMenuItem[]>([
         badge: 'Soon'
     },
     {
-        label: 'UI Kit',
+        label: 'Agent Kit',
         icon: 'i-lucide-blocks',
         defaultOpen: true,
         children: [
@@ -45,10 +45,20 @@ const items = ref<NavigationMenuItem[]>([
                 to: '/ui/ai-rules'
             },
             {
-                label: 'Table',
-                icon: 'i-lucide-table',
-                to: '/ui/table'
+                label: 'CRUD Reference',
+                icon: 'i-lucide-layers',
+                to: '/ui/crud'
             },
+            {
+                label: 'Input Events',
+                icon: 'i-lucide-file-edit',
+                to: '/ui/inputs'
+            },
+            {
+                label: 'Card Variants',
+                icon: 'i-lucide-layout-template',
+                to: '/ui/cards'
+            }
         ]
     }
 ])
@@ -139,7 +149,7 @@ const headerActions = computed(() => {
 
             <div :class="[
                 'flex-1',
-                route.meta.isTable ? 'flex flex-col overflow-hidden min-h-0' : 'p-4 overflow-y-auto'
+                route.meta.isTable ? 'flex flex-col overflow-hidden min-h-0' : 'p-4 overflow-y-auto scrollbar'
             ]">
                 <slot />
             </div>
