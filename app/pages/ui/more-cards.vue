@@ -26,20 +26,27 @@ const leaderboard = [
 ] as const
 
 const trafficSources = [
-    { source: 'Direct', value: 45, color: 'primary' },
-    { source: 'Social', value: 25, color: 'info' },
-    { source: 'Referral', value: 20, color: 'warning' },
-    { source: 'Other', value: 10, color: 'error' }
+    { source: 'Direct', value: 45, color: 'primary', icon: 'i-lucide-mouse-pointer-2' },
+    { source: 'Social', value: 25, color: 'info', icon: 'i-lucide-share-2' },
+    { source: 'Referral', value: 20, color: 'warning', icon: 'i-lucide-link' },
+    { source: 'Other', value: 10, color: 'error', icon: 'i-lucide-more-horizontal' }
 ] as const
-
-const topPerformers = [
-    { name: 'Core Engine v2', revenue: '$42k', growth: '+15%', status: 'Stable' },
-    { name: 'Analytics Pro', revenue: '$28k', growth: '+8%', status: 'Active' }
-]
 
 const sparklineData = [40, 35, 55, 45, 60, 50, 75, 65, 80]
 const forecastData = [65, 70, 68, 75, 82, 85, 90, 95]
 const retentionData = [100, 92, 85, 78, 72, 68, 65, 62]
+
+const nodeColumns = [
+    { accessorKey: 'id', header: 'Node ID' },
+    { accessorKey: 'status', header: 'Status' },
+    { accessorKey: 'load', header: 'Load', meta: { class: { th: 'text-right', td: 'text-right' } } }
+]
+
+const nodes = [
+    { id: 'NODE-01-US', status: 'Healthy', load: '27%' },
+    { id: 'NODE-02-US', status: 'Healthy', load: '39%' },
+    { id: 'NODE-03-US', status: 'Healthy', load: '51%' }
+]
 </script>
 
 <template>
@@ -59,7 +66,7 @@ const retentionData = [100, 92, 85, 78, 72, 68, 65, 62]
                         <h3 class="text-3xl font-black italic mt-1">$124,592</h3>
                     </div>
                     <div class="p-3 bg-primary/10 rounded-xl">
-                        <UIcon name="i-lucide-dollar-sign" class="size-6 text-primary" />
+                        <UIcon name="i-lucide-dollar-sign" class="size-6 text-primary flex" />
                     </div>
                 </div>
                 <div class="mt-4 flex items-center gap-2">
@@ -114,7 +121,7 @@ const retentionData = [100, 92, 85, 78, 72, 68, 65, 62]
         <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             <!-- 5. Revenue Breakdown Card -->
             <UCard title="Revenue Segments">
-                <div class="space-y-4 mt-4">
+                <div class="space-y-4">
                     <div v-for="item in revenueData" :key="item.label" class="space-y-1">
                         <div class="flex justify-between text-xs font-bold">
                             <span class="text-dimmed">{{ item.label }}</span>
@@ -127,17 +134,18 @@ const retentionData = [100, 92, 85, 78, 72, 68, 65, 62]
 
             <!-- 6. Activity Feed Card -->
             <UCard title="Recent Activity" description="Live updates from your workspace agents.">
-                <div class="space-y-4 mt-4">
-                    <div v-for="event in activityFeed" :key="event.id" class="flex gap-3">
+                <div class="space-y-4">
+                    <div v-for="event in activityFeed" :key="event.id" class="flex items-center gap-3">
                         <div :class="`bg-${event.color}/10 text-${event.color}`"
-                            class="size-8 rounded-lg flex items-center justify-center shrink-0">
+                            class="size-10 rounded-lg flex items-center justify-center shrink-0">
                             <UIcon :name="event.icon" class="size-4" />
                         </div>
                         <div class="min-w-0">
-                            <p class="text-sm font-medium leading-none">
-                                <span class="font-bold">{{ event.user }}</span> {{ event.action }}
+                            <p class="text-sm text-dimmed leading-none truncate">
+                                <span class="font-bold text-default">{{ event.user }}</span> {{ event.action }}
                             </p>
-                            <p class="text-[10px] text-dimmed mt-1 uppercase font-bold">{{ event.time }}</p>
+                            <p class="text-[10px] text-dimmed mt-1 uppercase font-bold leading-none">{{ event.time }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -182,11 +190,11 @@ const retentionData = [100, 92, 85, 78, 72, 68, 65, 62]
             <UCard>
                 <div class="flex items-center gap-4">
                     <div
-                        class="size-16 rounded-full bg-warning/10 flex items-center justify-center shrink-0 ring-4 ring-warning/5">
+                        class="size-16 rounded-full bg-warning/10 flex items-center justify-center shrink-0 ring-6 ring-warning/5">
                         <UIcon name="i-lucide-trophy" class="size-8 text-warning" />
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-lg font-black italic leading-none">Goal: $200k</h3>
+                        <h3 class="text-lg font-black leading-none">Goal: $200k</h3>
                         <p class="text-sm text-dimmed mt-1">Monthly target milestone progress.</p>
                         <div class="mt-4">
                             <div class="flex justify-between text-xs font-bold mb-1">
@@ -229,11 +237,11 @@ const retentionData = [100, 92, 85, 78, 72, 68, 65, 62]
 
             <!-- 11. Forecast Card -->
             <UCard title="Revenue Forecast" description="Predicted trends for the next 7 days.">
-                <div class="h-24 flex items-end gap-1 mt-4">
+                <div class="h-24 flex items-end gap-1">
                     <div v-for="(v, i) in forecastData" :key="i" :style="{ height: `${v}%` }"
                         class="flex-1 bg-info/30 hover:bg-info transition-all rounded-t-sm" />
                 </div>
-                <div class="mt-4 p-3 bg-neutral-50 dark:bg-neutral-900 rounded-lg flex items-center justify-between">
+                <div class="mt-4 bg-neutral-50 dark:bg-neutral-900 rounded-lg flex items-center justify-between">
                     <span class="text-xs font-bold">Projected End of Month</span>
                     <span class="text-sm font-black italic text-info">$185k</span>
                 </div>
@@ -243,7 +251,7 @@ const retentionData = [100, 92, 85, 78, 72, 68, 65, 62]
             <UCard title="Top Performer" class="relative overflow-hidden group">
                 <div
                     class="absolute -right-4 -top-4 size-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-colors" />
-                <div class="mt-4 flex items-center gap-4">
+                <div class="flex items-center gap-4">
                     <div class="size-12 rounded-xl bg-primary/20 flex items-center justify-center shadow-lg">
                         <UIcon name="i-lucide-zap" class="size-6 text-primary" />
                     </div>
@@ -266,14 +274,34 @@ const retentionData = [100, 92, 85, 78, 72, 68, 65, 62]
 
             <!-- 13. Leaderboard Card -->
             <UCard title="Agent Leaderboard">
-                <div class="space-y-4 mt-4">
-                    <div v-for="user in leaderboard" :key="user.rank" class="flex items-center gap-3">
-                        <span class="text-xs font-black text-dimmed w-4">#{{ user.rank }}</span>
+                <div class="space-y-4 divide-y divide-default *:pb-4">
+                    <div v-for="user in leaderboard" :key="user.rank" class="flex items-center gap-4 last:pb-0">
+                        <div class="relative flex items-center justify-center w-6 h-6 shrink-0">
+                            <!-- Background Glow for Top 3 -->
+                            <div v-if="user.rank <= 3" class="absolute inset-0 rounded-full blur-[2px] opacity-20"
+                                :class="{
+                                    'bg-yellow-400': user.rank === 1,
+                                    'bg-slate-400': user.rank === 2,
+                                    'bg-amber-600': user.rank === 3
+                                }" />
+                            <!-- Rank Badge -->
+                            <span
+                                class="text-[10px] font-black relative flex items-center justify-center w-full h-full rounded-full border transition-colors duration-300"
+                                :class="{
+                                    'bg-yellow-400/10 border-yellow-400/50 text-yellow-600 dark:text-yellow-400': user.rank === 1,
+                                    'bg-slate-400/10 border-slate-400/50 text-slate-600 dark:text-slate-400': user.rank === 2,
+                                    'bg-amber-600/10 border-amber-600/50 text-amber-700 dark:text-amber-500': user.rank === 3,
+                                    'bg-neutral-100 dark:bg-neutral-800 border-transparent text-dimmed': user.rank > 3
+                                }">
+                                <UIcon v-if="user.rank === 1" name="i-lucide-crown" class="size-3" />
+                                <template v-else>{{ user.rank }}</template>
+                            </span>
+                        </div>
                         <UAvatar :src="user.avatar" size="xs" />
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-bold truncate">{{ user.name }}</p>
                         </div>
-                        <div class="text-right">
+                        <div class="flex items-center gap-1">
                             <p class="text-xs font-black">{{ user.score }}</p>
                             <UIcon :name="user.trend === 'up' ? 'i-lucide-trending-up' : 'i-lucide-trending-down'"
                                 :class="user.trend === 'up' ? 'text-success' : 'text-error'" class="size-3" />
@@ -283,62 +311,58 @@ const retentionData = [100, 92, 85, 78, 72, 68, 65, 62]
             </UCard>
 
             <!-- 14. Data Table Card -->
-            <UCard class="md:col-span-2 overflow-hidden" :ui="{ body: 'p-0' }">
+            <UCard class="md:col-span-2 overflow-hidden" :ui="{ body: 'p-0 sm:p-0' }">
                 <template #header>
                     <div class="flex items-center justify-between">
                         <h3 class="font-bold italic text-sm">System Nodes</h3>
                         <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-maximize-2" />
                     </div>
                 </template>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead class="bg-neutral-50 dark:bg-neutral-900 border-b border-default">
-                            <tr>
-                                <th class="p-3 font-bold uppercase text-dimmed tracking-widest">Node ID</th>
-                                <th class="p-3 font-bold uppercase text-dimmed tracking-widest">Status</th>
-                                <th class="p-3 font-bold uppercase text-dimmed tracking-widest text-right">Load</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-default">
-                            <tr v-for="i in 3" :key="i" class="hover:bg-neutral-50 dark:hover:bg-neutral-900/50">
-                                <td class="p-3 font-medium">NODE-0{{ i }}-US</td>
-                                <td class="p-3">
-                                    <UBadge color="success" variant="subtle" size="sm" class="rounded-full">Healthy
-                                    </UBadge>
-                                </td>
-                                <td class="p-3 text-right font-black italic">{{ 15 + (i * 12) }}%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <UTable :columns="nodeColumns" :data="nodes" :ui="{
+                    thead: 'bg-neutral-50 dark:bg-neutral-900 border-b border-default',
+                    th: 'px-6 text-[10px] font-bold uppercase text-dimmed tracking-widest',
+                    td: 'px-6 text-xs'
+                }">
+                    <template #id-cell="{ row }">
+                        <span class="font-medium">{{ row.getValue('id') }}</span>
+                    </template>
+                    <template #status-cell="{ row }">
+                        <UBadge color="success" variant="subtle" size="sm" class="rounded-full">
+                            {{ row.getValue('status') }}
+                        </UBadge>
+                    </template>
+                    <template #load-cell="{ row }">
+                        <span class="font-black italic text-right block w-full">{{ row.getValue('load') }}</span>
+                    </template>
+                </UTable>
             </UCard>
         </section>
 
         <!-- Section 5: Complex Analytics -->
         <section class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
             <!-- 15. Split Metrics Card -->
-            <UCard class="lg:col-span-2">
+            <UCard class="lg:col-span-2" :ui="{ body: 'px-0 sm:px-0' }">
                 <div class="grid grid-cols-3 divide-x divide-default h-full items-center">
                     <div class="text-center px-4">
                         <p class="text-[10px] text-dimmed font-bold uppercase mb-1 tracking-widest">CPU</p>
-                        <p class="text-2xl font-black italic">42%</p>
+                        <p class="text-2xl font-black">42%</p>
                         <UIcon name="i-lucide-cpu" class="size-4 text-primary mt-2 mx-auto" />
                     </div>
                     <div class="text-center px-4">
                         <p class="text-[10px] text-dimmed font-bold uppercase mb-1 tracking-widest">RAM</p>
-                        <p class="text-2xl font-black italic">8.2<span class="text-xs font-medium">GB</span></p>
+                        <p class="text-2xl font-black">8.2<span class="text-xs font-medium">GB</span></p>
                         <UIcon name="i-lucide-memory-stick" class="size-4 text-info mt-2 mx-auto" />
                     </div>
                     <div class="text-center px-4">
                         <p class="text-[10px] text-dimmed font-bold uppercase mb-1 tracking-widest">Disk</p>
-                        <p class="text-2xl font-black italic text-error">92%</p>
+                        <p class="text-2xl font-black text-error">92%</p>
                         <UIcon name="i-lucide-hard-drive" class="size-4 text-error mt-2 mx-auto" />
                     </div>
                 </div>
             </UCard>
 
             <!-- 16. Circular Gauge Card -->
-            <UCard class="flex flex-col items-center justify-center py-6">
+            <UCard :ui="{ body: 'flex flex-col items-center justify-center gap-4' }">
                 <div class="relative size-24">
                     <svg class="size-full" viewBox="0 0 36 36">
                         <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
@@ -350,7 +374,7 @@ const retentionData = [100, 92, 85, 78, 72, 68, 65, 62]
                     </svg>
                     <div class="absolute inset-0 flex items-center justify-center text-xl font-black italic">85%</div>
                 </div>
-                <p class="mt-2 text-xs font-bold text-dimmed uppercase tracking-widest">Customer Satisfaction</p>
+                <p class="text-xs font-bold text-dimmed uppercase tracking-widest">Customer Satisfaction</p>
             </UCard>
 
             <!-- 17. Financial Snapshot Card -->
@@ -380,16 +404,16 @@ const retentionData = [100, 92, 85, 78, 72, 68, 65, 62]
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
             <!-- 18. Traffic Source Card -->
             <UCard title="Traffic Sources">
-                <div class="space-y-3 mt-4">
+                <div class="space-y-3">
                     <div v-for="source in trafficSources" :key="source.source" class="space-y-1">
-                        <div class="flex justify-between text-[10px] font-bold uppercase">
-                            <span class="text-dimmed">{{ source.source }}</span>
+                        <div class="flex justify-between text-[10px] font-bold uppercase items-center">
+                            <div class="flex items-center gap-1.5">
+                                <UIcon :name="source.icon" class="size-3 text-dimmed" />
+                                <span class="text-dimmed">{{ source.source }}</span>
+                            </div>
                             <span>{{ source.value }}%</span>
                         </div>
-                        <div class="h-1.5 w-full bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden">
-                            <div :class="`bg-${source.color}`" :style="{ width: `${source.value}%` }"
-                                class="h-full rounded-full" />
-                        </div>
+                        <UProgress :model-value="source.value" :color="source.color" size="sm" />
                     </div>
                 </div>
             </UCard>
@@ -414,7 +438,10 @@ const retentionData = [100, 92, 85, 78, 72, 68, 65, 62]
             <!-- 20. System Health Card -->
             <UCard class="bg-neutral-950 border-neutral-800">
                 <div class="flex items-center gap-2 mb-6">
-                    <div class="size-3 rounded-full bg-success shadow-[0_0_12px_rgba(34,197,94,0.5)]" />
+                    <div
+                        class="relative flex items-center justify-center size-3 before:content-[''] before:absolute before:inset-0 before:animate-ping before:rounded-full before:bg-success/60">
+                        <UChip color="success" size="md" class="relative" standalone inset :ui="{ base: 'ring-0' }" />
+                    </div>
                     <h3 class="text-sm font-black italic text-white uppercase tracking-widest">System Health</h3>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
