@@ -110,6 +110,29 @@ const faqItems = [
     { label: 'Can I export my data?', content: 'Yes, we support exports in CSV, JSON, and PDF formats for all your workspace data.' },
     { label: 'Is there a mobile app?', content: 'Our platform is a fully responsive PWA that works seamlessly on any mobile browser.' }
 ]
+
+// ============================================================================
+// Mock Data: Advanced & Experimental
+// ============================================================================
+const workflowNodes = [
+    { id: '1', name: 'Query Expansion', type: 'Processor', status: 'active', confidence: 0.98, logs: ['Expanding terms...', 'Filtering noise...'], icon: 'i-lucide-layers' },
+    { id: '2', name: 'Vector Search', type: 'Retrieval', status: 'pending', confidence: 0.85, logs: ['Connecting to DB...', 'Awaiting response'], icon: 'i-lucide-search' },
+    { id: '3', name: 'LLM Reranker', type: 'Optimizer', status: 'idle', confidence: 0, logs: [], icon: 'i-lucide-brain' }
+] as const
+
+const iotDevices = [
+    { name: 'Smart Thermostat', room: 'Living Room', temp: 22.5, battery: 85, status: true, color: 'primary' },
+    { name: 'Air Purifier', room: 'Master Bedroom', quality: 'Excellent', filter: 92, status: false, color: 'success' },
+    { name: 'Security Hub', room: 'Entryway', alerts: 0, battery: 100, status: true, color: 'error' }
+] as const
+
+const locationData = {
+    address: '1600 Amphitheatre Pkwy, Mountain View, CA',
+    weather: 'Sunny',
+    temp: '72°F',
+    coords: '37.4221° N, 122.0841° W',
+    timezone: 'PST (UTC-8)'
+} as const
 </script>
 
 <template>
@@ -1128,5 +1151,408 @@ const faqItems = [
                 </UCard>
             </div>
         </section>
+
+        <USeparator />
+
+        <!-- ==========================================================================
+             VIII. Advanced Interactive Patterns
+             ========================================================================== -->
+        <div
+            class="space-y-2 relative pl-6 py-2 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1.5 before:bg-primary before:rounded-r-full">
+            <h2 class="text-3xl font-black uppercase tracking-tighter">VIII. Advanced Interactive Patterns</h2>
+            <p class="text-sm text-dimmed uppercase tracking-widest">Complex orchestrators, IoT controls, and spatial
+                data
+            </p>
+        </div>
+
+        <!-- 19. AI Node Orchestrator -->
+        <section>
+            <div class="flex items-center gap-2 mb-6">
+                <UIcon name="i-lucide-cpu" class="size-5 text-primary" />
+                <h2 class="text-xl font-bold">AI Node Orchestrator</h2>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <UCard v-for="node in workflowNodes" :key="node.id"
+                    class="relative overflow-hidden group transition-all duration-500 hover:ring-2 hover:ring-primary/50"
+                    :class="node.status === 'active' ? 'bg-primary/5 border-primary/20' : ''">
+
+                    <!-- Progress Pulse (Active only) -->
+                    <div v-if="node.status === 'active'"
+                        class="absolute top-0 left-0 w-full h-1 overflow-hidden bg-primary/10">
+                        <div
+                            class="h-full bg-primary animate-[shimmer_2s_infinite] w-1/3 shadow-[0_0_15px_rgba(var(--color-primary-500),0.5)]" />
+                    </div>
+
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <div :class="[
+                                node.status === 'active' ? 'bg-primary text-white scale-110 shadow-lg' :
+                                    node.status === 'pending' ? 'bg-warning/20 text-warning' : 'bg-neutral-100 dark:bg-neutral-800 text-dimmed'
+                            ]" class="size-10 rounded-xl flex items-center justify-center transition-all duration-500">
+                                <UIcon :name="node.icon" class="size-5"
+                                    :class="node.status === 'active' ? 'animate-pulse' : ''" />
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm leading-none">{{ node.name }}</h4>
+                                <span class="text-[10px] text-dimmed uppercase font-bold tracking-widest">{{ node.type
+                                }}</span>
+                            </div>
+                        </div>
+                        <UBadge :label="node.status" size="sm" variant="subtle"
+                            :color="node.status === 'active' ? 'primary' : node.status === 'pending' ? 'warning' : 'neutral'"
+                            class="font-black uppercase text-[9px]" />
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Confidence Meter -->
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-[10px] font-bold uppercase text-dimmed">
+                                <span>Confidence</span>
+                                <span>{{ (node.confidence * 100).toFixed(0) }}%</span>
+                            </div>
+                            <UProgress :model-value="node.confidence * 100"
+                                :color="node.confidence > 0.9 ? 'primary' : node.confidence > 0.8 ? 'warning' : 'neutral'"
+                                size="sm" />
+                        </div>
+
+                        <!-- Micro Logs -->
+                        <div
+                            class="bg-neutral-950 rounded-lg p-3 font-mono text-[10px] space-y-1.5 border border-neutral-800 min-h-[60px]">
+                            <div v-if="node.logs.length === 0" class="text-neutral-600 italic">Awaiting execution...
+                            </div>
+                            <div v-for="(log, i) in node.logs" :key="i" class="flex gap-2">
+                                <span class="text-primary/50">></span>
+                                <span class="text-neutral-400 truncate">{{ log }}</span>
+                            </div>
+                            <div v-if="node.status === 'active'"
+                                class="w-1.5 h-3 bg-primary animate-pulse inline-block align-middle ml-1" />
+                        </div>
+                    </div>
+
+                    <template #footer>
+                        <div class="flex gap-2">
+                            <UButton label="Configure" variant="ghost" color="neutral" size="xs"
+                                class="flex-1 font-bold" />
+                            <UButton :icon="node.status === 'active' ? 'i-lucide-pause' : 'i-lucide-play'"
+                                :color="node.status === 'active' ? 'warning' : 'primary'" size="xs" variant="soft" />
+                        </div>
+                    </template>
+                </UCard>
+            </div>
+        </section>
+
+        <!-- 20. IoT & Device Monitoring -->
+        <section>
+            <div class="flex items-center gap-2 mb-6">
+                <UIcon name="i-lucide-home" class="size-5 text-primary" />
+                <h2 class="text-xl font-bold">Smart IoT Controllers</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <UCard v-for="device in iotDevices" :key="device.name"
+                    class="relative overflow-hidden backdrop-blur-xl border-white/10" :ui="{ body: 'relative z-10' }">
+                    <!-- Glassmorphism Background -->
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent dark:from-neutral-900/50 pointer-events-none" />
+                    <div :class="`bg-${device.color}/5`"
+                        class="absolute -right-12 -top-12 size-32 rounded-full blur-3xl pointer-events-none" />
+
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex items-center gap-3">
+                            <div :class="`bg-${device.color}/10 text-${device.color}`"
+                                class="size-12 rounded-2xl flex items-center justify-center shadow-inner">
+                                <UIcon
+                                    :name="device.name.includes('Thermostat') ? 'i-lucide-thermometer' : device.name.includes('Purifier') ? 'i-lucide-wind' : 'i-lucide-shield-check'"
+                                    class="size-6" />
+                            </div>
+                            <div>
+                                <h4 class="font-bold">{{ device.name }}</h4>
+                                <p class="text-xs text-dimmed">{{ device.room }}</p>
+                            </div>
+                        </div>
+                        <USwitch v-model="device.status" :color="device.color" />
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div v-if="'temp' in device"
+                            class="p-3 rounded-2xl bg-neutral-100/50 dark:bg-neutral-800/50 border border-white/5">
+                            <div class="text-[10px] font-black uppercase text-dimmed mb-1">Temperature</div>
+                            <div class="text-2xl font-black italic">{{ device.temp }}°C</div>
+                        </div>
+                        <div v-if="'quality' in device"
+                            class="p-3 rounded-2xl bg-neutral-100/50 dark:bg-neutral-800/50 border border-white/5">
+                            <div class="text-[10px] font-black uppercase text-dimmed mb-1">Air Quality</div>
+                            <div class="text-lg font-black italic text-success">{{ device.quality }}</div>
+                        </div>
+                        <div v-if="'filter' in device"
+                            class="p-3 rounded-2xl bg-neutral-100/50 dark:bg-neutral-800/50 border border-white/5">
+                            <div class="text-[10px] font-black uppercase text-dimmed mb-1">Filter Life</div>
+                            <div class="text-2xl font-black italic">{{ device.filter }}%</div>
+                        </div>
+                        <div v-if="'alerts' in device"
+                            class="p-3 rounded-2xl bg-neutral-100/50 dark:bg-neutral-800/50 border border-white/5">
+                            <div class="text-[10px] font-black uppercase text-dimmed mb-1">Alerts</div>
+                            <div class="text-2xl font-black italic"
+                                :class="device.alerts > 0 ? 'text-error' : 'text-success'">
+                                {{ device.alerts }}</div>
+                        </div>
+                        <div v-if="'battery' in device"
+                            class="p-3 rounded-2xl bg-neutral-100/50 dark:bg-neutral-800/50 border border-white/5">
+                            <div class="text-[10px] font-black uppercase text-dimmed mb-1">Battery</div>
+                            <div class="flex items-center gap-2">
+                                <div
+                                    class="flex-1 h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
+                                    <div class="h-full bg-success" :style="{ width: `${device.battery}%` }" />
+                                </div>
+                                <span class="text-xs font-bold">{{ device.battery }}%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <template #footer>
+                        <div
+                            class="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-dimmed">
+                            <span>Last Updated: 2m ago</span>
+                            <div class="flex items-center gap-1">
+                                <div class="size-1.5 rounded-full bg-success animate-pulse" />
+                                <span>Connected</span>
+                            </div>
+                        </div>
+                    </template>
+                </UCard>
+            </div>
+        </section>
+
+        <!-- 21. Spatial & Map Card -->
+        <section>
+            <div class="flex items-center gap-2 mb-6">
+                <UIcon name="i-lucide-map" class="size-5 text-primary" />
+                <h2 class="text-xl font-bold">Spatial & Location Explorer</h2>
+            </div>
+            <UCard :ui="{ body: 'p-0 sm:p-0 flex flex-col lg:flex-row overflow-hidden min-h-[400px]' }">
+                <!-- Map Preview Side -->
+                <div class="lg:w-2/3 bg-neutral-100 dark:bg-neutral-800 relative group overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=1200&auto=format&fit=crop&q=60"
+                        class="w-full h-full object-cover transition-transform duration-[20s] linear group-hover:scale-150" />
+
+                    <!-- Map Overlay UI -->
+                    <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
+
+                    <!-- Floating Map Controls -->
+                    <div class="absolute top-4 right-4 flex flex-col gap-2">
+                        <UButton icon="i-lucide-plus" color="neutral" variant="solid" size="sm" />
+                        <UButton icon="i-lucide-minus" color="neutral" variant="solid" size="sm" />
+                        <UButton icon="i-lucide-navigation" color="primary" variant="solid" size="sm" />
+                    </div>
+
+                    <!-- Location Marker -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                        <div class="relative">
+                            <div class="absolute inset-0 animate-ping rounded-full bg-primary/40" />
+                            <div
+                                class="relative size-6 rounded-full bg-primary border-4 border-white shadow-2xl flex items-center justify-center">
+                                <div class="size-1.5 rounded-full bg-white" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Coordinates Badge -->
+                    <div
+                        class="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-mono text-white border border-white/10">
+                        {{ locationData.coords }}
+                    </div>
+                </div>
+
+                <!-- Info Side -->
+                <div class="lg:w-1/3 p-8 flex flex-col bg-white dark:bg-neutral-950">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="size-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                            <UIcon name="i-lucide-map-pin" class="size-6 text-primary" />
+                        </div>
+                        <div>
+                            <h3 class="font-black italic text-xl">Headquarters</h3>
+                            <p class="text-[10px] text-dimmed uppercase font-bold tracking-widest">Main Campus</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 flex-1">
+                        <div class="space-y-1">
+                            <div class="text-[10px] font-black uppercase text-dimmed tracking-tighter">Address</div>
+                            <p class="text-sm font-medium leading-relaxed">{{ locationData.address }}</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div
+                                class="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800">
+                                <div class="text-[10px] font-black uppercase text-dimmed mb-1">Weather</div>
+                                <div class="flex items-center gap-2">
+                                    <UIcon name="i-lucide-sun" class="size-4 text-warning" />
+                                    <span class="text-lg font-black italic">{{ locationData.temp }}</span>
+                                </div>
+                            </div>
+                            <div
+                                class="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800">
+                                <div class="text-[10px] font-black uppercase text-dimmed mb-1">Timezone</div>
+                                <div class="text-sm font-black italic mt-1">{{ locationData.timezone }}</div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="text-[10px] font-black uppercase text-dimmed tracking-tighter">Nearby Nodes
+                            </div>
+                            <div class="flex -space-x-3">
+                                <UAvatar v-for="i in 5" :key="i" :src="`https://i.pravatar.cc/100?u=map-${i}`"
+                                    class="ring-4 ring-white dark:ring-neutral-950" />
+                                <div
+                                    class="size-10 rounded-full bg-primary text-white flex items-center justify-center text-xs font-black ring-4 ring-white dark:ring-neutral-950 z-10">
+                                    +12
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <UButton label="Open in Google Maps" icon="i-lucide-external-link" block color="primary"
+                        class="mt-8" />
+                </div>
+            </UCard>
+        </section>
+
+        <USeparator />
+
+        <!-- ==========================================================================
+             IX. Experimental & Decorative
+             ========================================================================== -->
+        <div
+            class="space-y-2 relative pl-6 py-2 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1.5 before:bg-primary before:rounded-r-full">
+            <h2 class="text-3xl font-black uppercase tracking-tighter">IX. Experimental & Decorative</h2>
+            <p class="text-sm text-dimmed uppercase tracking-widest">High-impact visual designs and advanced CSS
+                patterns
+            </p>
+        </div>
+
+        <section>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- 3D Perspective Card -->
+                <div class="group [perspective:1000px]">
+                    <div
+                        class="relative transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateX(10deg)_rotateY(-10deg)]">
+                        <UCard
+                            class="relative overflow-hidden border-0 ring-1 ring-white/20 bg-neutral-900 text-white min-h-[300px] flex flex-col justify-center items-center text-center p-12">
+                            <!-- Animated Background Gradients -->
+                            <div
+                                class="absolute inset-0 bg-gradient-to-br from-primary/40 via-purple-600/40 to-blue-600/40 opacity-50 blur-3xl animate-pulse" />
+                            <div
+                                class="absolute -inset-1 bg-gradient-to-r from-primary via-purple-500 to-blue-500 rounded-2xl opacity-20 group-hover:opacity-100 transition-opacity blur" />
+
+                            <div class="relative z-10 [transform:translateZ(50px)]">
+                                <div
+                                    class="size-20 rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center mb-8 mx-auto border border-white/20 shadow-2xl">
+                                    <UIcon name="i-lucide-box" class="size-10 text-primary" />
+                                </div>
+                                <h3 class="text-4xl font-black italic tracking-tighter mb-4 uppercase">Perspective</h3>
+                                <p class="text-sm text-white/60 max-w-xs mx-auto leading-relaxed">
+                                    Hover over this card to experience 3D transformation effects using CSS perspective
+                                    and
+                                    transform properties.
+                                </p>
+                            </div>
+
+                            <div class="absolute bottom-8 right-8 [transform:translateZ(30px)]">
+                                <UButton label="Explore 3D" color="primary" variant="solid" size="lg"
+                                    class="rounded-full px-8 shadow-[0_0_30px_rgba(var(--color-primary-500),0.5)]" />
+                            </div>
+                        </UCard>
+                    </div>
+                </div>
+
+                <!-- Glassmorphic Stats Card -->
+                <div class="relative min-h-[300px] flex items-center justify-center overflow-hidden rounded-3xl">
+                    <!-- Background Visuals -->
+                    <div class="absolute inset-0 bg-neutral-950">
+                        <div
+                            class="absolute top-0 left-0 size-64 bg-primary/30 rounded-full blur-[100px] animate-blob" />
+                        <div
+                            class="absolute bottom-0 right-0 size-64 bg-blue-600/30 rounded-full blur-[100px] animate-blob animation-delay-2000" />
+                        <div
+                            class="absolute top-1/2 left-1/2 size-64 bg-purple-600/20 rounded-full blur-[100px] animate-blob animation-delay-4000" />
+                    </div>
+
+                    <UCard
+                        class="relative z-10 w-full max-w-sm backdrop-blur-2xl bg-white/5 border-white/10 text-white shadow-2xl">
+                        <template #header>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-black uppercase tracking-[0.2em] text-primary">System
+                                    Overload</span>
+                                <div class="size-2 rounded-full bg-error animate-ping" />
+                            </div>
+                        </template>
+
+                        <div class="text-center py-6">
+                            <div class="text-6xl font-black italic tracking-tighter mb-2">94<span
+                                    class="text-2xl text-primary">%</span></div>
+                            <p class="text-xs text-white/50 uppercase font-bold tracking-widest">Global Resource Usage
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <div class="p-4 rounded-2xl bg-white/5 border border-white/5 text-center">
+                                <div class="text-xl font-bold">12.4s</div>
+                                <div class="text-[9px] uppercase font-black text-white/40">Latency</div>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-white/5 border border-white/5 text-center">
+                                <div class="text-xl font-bold text-success">Active</div>
+                                <div class="text-[9px] uppercase font-black text-white/40">Status</div>
+                            </div>
+                        </div>
+
+                        <template #footer>
+                            <UButton label="Initialize Reset" block variant="outline" color="neutral" size="lg"
+                                class="hover:bg-white hover:text-black transition-all duration-500 font-black italic uppercase" />
+                        </template>
+                    </UCard>
+                </div>
+            </div>
+        </section>
     </div>
 </template>
+
+<style scoped>
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(300%);
+    }
+}
+
+@keyframes blob {
+    0% {
+        transform: translate(0px, 0px) scale(1);
+    }
+
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+        transform: translate(0px, 0px) scale(1);
+    }
+}
+
+.animation-delay-2000 {
+    animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+    animation-delay: 4s;
+}
+
+.animate-blob {
+    animation: blob 7s infinite;
+}
+</style>
