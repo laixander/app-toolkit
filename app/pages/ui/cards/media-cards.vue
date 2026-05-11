@@ -93,7 +93,7 @@ const portfolio = {
     name: 'Luminal Dashboard',
     tags: ['Vue', 'Tailwind', 'Three.js'],
     description: 'A data-rich dashboard with real-time analytics and 3D visualizations.',
-    image: 'https://images.unsplash.com/photo-1551288049-bbbda536339a?w=800&auto=format&fit=crop&q=60'
+    image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&auto=format&fit=crop&q=60'
 }
 
 const photography = {
@@ -300,7 +300,7 @@ const mediaPlaylist = {
     <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
 
         <!-- 5. Tutorial Step Card -->
-        <UCard class="group relative">
+        <UCard :ui="{ root: 'overflow-visible' }" class="group relative">
             <div
                 class="absolute -top-4 -left-4 size-10 rounded-2xl bg-primary text-white flex items-center justify-center font-black text-xl shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform">
                 {{ tutorialStep.step }}
@@ -320,7 +320,7 @@ const mediaPlaylist = {
         </UCard>
 
         <!-- 6. Course Lesson Card -->
-        <UCard class="border-l-4 border-primary">
+        <UCard :ui="{ body: 'border-l-6 border-primary' }">
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <p class="text-[10px] text-primary font-black uppercase tracking-widest mb-1">{{ courseLesson.module
@@ -404,11 +404,12 @@ const mediaPlaylist = {
                             <span>{{ recipe.calories }}</span>
                         </div>
                     </div>
+
+                    <div class="mt-4 flex gap-2 overflow-x-auto scrollbar-hide">
+                        <UBadge v-for="tag in ['Flour', 'Water', 'Salt', 'Yeast']" :key="tag" :label="tag"
+                            variant="soft" color="neutral" size="xs" class="rounded-full" />
+                    </div>
                 </div>
-            </div>
-            <div class="p-4 flex gap-2 overflow-x-auto scrollbar-hide">
-                <UBadge v-for="tag in ['Flour', 'Water', 'Salt', 'Yeast']" :key="tag" :label="tag" variant="soft"
-                    color="neutral" size="xs" class="rounded-full" />
             </div>
         </UCard>
 
@@ -453,11 +454,11 @@ const mediaPlaylist = {
         <UCard :ui="{ body: 'p-0 sm:p-0' }"
             class="overflow-hidden group border-0 ring-1 ring-default hover:ring-primary/50 transition-all">
             <div
-                class="bg-neutral-100 dark:bg-neutral-900 p-8 aspect-video relative flex items-center justify-center overflow-hidden">
+                class="bg-neutral-100 dark:bg-neutral-900 aspect-video relative flex items-center justify-center overflow-hidden">
                 <div
                     class="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--color-primary-500)_0,transparent_70%)] opacity-10 group-hover:opacity-20 transition-opacity" />
                 <img :src="portfolio.image"
-                    class="w-[80%] rounded-xl shadow-2xl transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-2" />
+                    class="inset-0 shadow-2xl transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-2" />
             </div>
             <div class="p-6">
                 <div class="flex gap-2 mb-4">
