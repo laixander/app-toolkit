@@ -58,16 +58,6 @@ const items = ref<NavigationMenuItem[]>([
                 label: 'Card Variants',
                 icon: 'i-lucide-layout-template',
                 to: '/ui/cards'
-            },
-            {
-                label: 'Analytics Cards',
-                icon: 'i-lucide-chart-bar-big',
-                to: '/ui/more-cards'
-            },
-            {
-                label: 'Ecommerce Cards',
-                icon: 'i-lucide-shopping-bag',
-                to: '/ui/ecommerce-cards'
             }
         ]
     }
