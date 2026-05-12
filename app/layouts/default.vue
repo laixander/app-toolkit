@@ -22,8 +22,14 @@ const collapsible = ref<SidebarProps['collapsible']>('icon')
 // Sidebar toggle state
 const open = ref(true)
 
+// ============================================================================
+// Composables
+// ============================================================================
+const route = useRoute()
+const events = useEvents()
+
 // Sidebar navigation items mapping
-const items = ref<NavigationMenuItem[]>([
+const items = computed<NavigationMenuItem[]>(() => [
     {
         label: 'Clockify',
         icon: 'i-lucide-timer',
@@ -57,17 +63,12 @@ const items = ref<NavigationMenuItem[]>([
             {
                 label: 'Card Variants',
                 icon: 'i-lucide-layout-template',
-                to: '/ui/cards'
+                to: '/ui/cards/card-system',
+                active: route.path.startsWith('/ui/cards')
             }
         ]
     }
 ])
-
-// ============================================================================
-// Composables
-// ============================================================================
-const route = useRoute()
-const events = useEvents()
 
 // ============================================================================
 // Computed Properties
