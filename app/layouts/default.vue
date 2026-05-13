@@ -120,7 +120,10 @@ const headerActions = computed(() => {
             root: '[--sidebar-width-icon:4.5625rem]', container: 'h-full', header: 'px-5'
         }">
             <template #header>
-                <UIcon name="i-fluent-emoji-flat-toolbox" class="size-8" />
+                <div class="flex items-end gap-2.5">
+                    <UIcon name="i-fluent-emoji-flat-toolbox" class="size-8 shrink-0" />
+                    <span class="font-black text-neutral-900 dark:text-white tracking-tight">Desk<span class="text-primary">Hub</span></span>
+                </div>
             </template>
 
             <UNavigationMenu :items="items" orientation="vertical" :collapsed="isCollapsed" :tooltip="{
