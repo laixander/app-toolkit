@@ -220,7 +220,7 @@ const copyRawHtml = async () => {
                         <div class="flex items-center gap-4">
                             <div class="rounded-none squircle flex items-center p-2 bg-primary dark:bg-primary-900"><UIcon name="i-lucide-info" class="size-6 text-white dark:text-primary" /></div>
                             <div class="flex flex-col">
-                                <h2 class="font-semibold text-neutral-900 dark:text-white">How to use it</h2>
+                                <h2 class="font-semibold text-neutral-900 dark:text-white">How it Works</h2>
                                 <p class="text-sm text-dimmed">Instructions on how to use this tool.</p>
                             </div>
                         </div>
