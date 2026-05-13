@@ -36,38 +36,43 @@ const items = computed<NavigationMenuItem[]>(() => [
         to: '/'
     },
     {
+        label: 'Email Signature',
+        icon: 'i-lucide-mail',
+        to: '/email'
+    },
+    {
         label: 'Coming Soon',
         icon: 'i-lucide-construction',
         badge: 'Soon'
     },
-    {
-        label: 'Agent Kit',
-        icon: 'i-lucide-blocks',
-        defaultOpen: true,
-        children: [
-            {
-                label: 'AI Rules',
-                icon: 'i-lucide-scroll-text',
-                to: '/ui/ai-rules'
-            },
-            {
-                label: 'CRUD Reference',
-                icon: 'i-lucide-layers',
-                to: '/ui/crud'
-            },
-            {
-                label: 'Input Events',
-                icon: 'i-lucide-file-edit',
-                to: '/ui/inputs'
-            },
-            {
-                label: 'Card Variants',
-                icon: 'i-lucide-layout-template',
-                to: '/ui/cards/card-system',
-                active: route.path.startsWith('/ui/cards')
-            }
-        ]
-    }
+    // {
+    //     label: 'Agent Kit',
+    //     icon: 'i-lucide-blocks',
+    //     defaultOpen: true,
+    //     children: [
+    //         {
+    //             label: 'AI Rules',
+    //             icon: 'i-lucide-scroll-text',
+    //             to: '/ui/ai-rules'
+    //         },
+    //         {
+    //             label: 'CRUD Reference',
+    //             icon: 'i-lucide-layers',
+    //             to: '/ui/crud'
+    //         },
+    //         {
+    //             label: 'Input Events',
+    //             icon: 'i-lucide-file-edit',
+    //             to: '/ui/inputs'
+    //         },
+    //         {
+    //             label: 'Card Variants',
+    //             icon: 'i-lucide-layout-template',
+    //             to: '/ui/cards/card-system',
+    //             active: route.path.startsWith('/ui/cards')
+    //         }
+    //     ]
+    // }
 ])
 
 // ============================================================================
@@ -115,7 +120,7 @@ const headerActions = computed(() => {
             root: '[--sidebar-width-icon:4.5625rem]', container: 'h-full', header: 'px-5'
         }">
             <template #header>
-                <UIcon name="i-logos-nuxt-icon" class="size-8" />
+                <UIcon name="i-fluent-emoji-flat-toolbox" class="size-8" />
             </template>
 
             <UNavigationMenu :items="items" orientation="vertical" :collapsed="isCollapsed" :tooltip="{
@@ -156,6 +161,6 @@ const headerActions = computed(() => {
             </div>
         </div>
 
-        <DemoFab />
+        <!-- <DemoFab /> -->
     </div>
 </template>

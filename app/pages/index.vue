@@ -10,7 +10,7 @@ definePageMeta({
 
 const toast = useToast()
 const events = useEvents()
-const logger = useLogger()
+const logger = useLogger('clockify')
 const isDrawerOpen = ref(false)
 events.on('viewLogs', () => {
     isDrawerOpen.value = true
@@ -721,67 +721,5 @@ watch(entries, () => {
         </div>
     </UPage>
 
-    <UDrawer v-model:open="isDrawerOpen" direction="right" inset title="Application Logs"
-        description="View real-time application events and status." :ui="{ container: 'sm:py-6 sm:pr-8' }">
-        <template #header>
-            <div class="flex items-center justify-between w-full">
-                <div>
-                    <div class="text-lg font-semibold">Application Logs</div>
-                    <div class="text-sm text-muted-foreground">View real-time application events and status.</div>
-                </div>
-                <UButton label="Clear" icon="i-lucide-trash-2" color="error" variant="soft" size="sm"
-                    @click="logger.clearLogs" :disabled="!logger.logs.value.length" />
-            </div>
-        </template>
-        <template #body>
-            <div v-if="logger.logs.value.length" class="relative pl-8 space-y-6">
-                <!-- Vertical Timeline Line -->
-                <div class="absolute left-4 top-2 bottom-2 w-0.5 bg-neutral-200 dark:bg-neutral-800 rounded-full"></div>
-
-                <div v-for="log in logger.logs.value" :key="log.id" class="relative">
-                    <!-- Timeline Dot -->
-                    <div class="absolute -left-[19px] top-1/2 -translate-y-1/2 size-2 rounded-full ring-5 ring-white dark:ring-neutral-900 z-10 shadow-sm"
-                        :class="[
-                            log.level === 'error' ? 'bg-error' :
-                                log.level === 'warn' ? 'bg-warning' :
-                                    'bg-primary'
-                        ]">
-                    </div>
-
-                    <!-- Log Card -->
-                    <div
-                        class="flex flex-col gap-2 text-sm bg-neutral-100/50 dark:bg-neutral-800/50 p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 transition-all hover:border-primary/30 dark:hover:border-primary/30 group">
-                        <div class="flex items-center gap-2">
-                            <UIcon
-                                :name="log.level === 'error' ? 'i-lucide-alert-circle' : log.level === 'warn' ? 'i-lucide-alert-triangle' : 'i-lucide-info'"
-                                :class="[log.level === 'error' ? 'text-error' : log.level === 'warn' ? 'text-warning' : 'text-primary', 'size-4 transition-transform group-hover:scale-110']" />
-                            <span class="font-bold uppercase text-[10px] tracking-widest"
-                                :class="[log.level === 'error' ? 'text-error' : log.level === 'warn' ? 'text-warning' : 'text-primary']">
-                                {{ log.level }}
-                            </span>
-                            <span
-                                class="text-[10px] font-medium text-muted-foreground ml-auto bg-neutral-200 dark:bg-neutral-700 px-1.5 py-0.5 rounded">
-                                {{ new Date(log.timestamp).toLocaleTimeString([], {
-                                    hour: '2-digit', minute: '2-digit',
-                                    second: '2-digit'
-                                }) }}
-                            </span>
-                        </div>
-                        <span class="text-neutral-700 dark:text-neutral-300 leading-relaxed font-medium">
-                            {{ log.message }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div v-else class="flex flex-col items-center justify-center py-24 text-center">
-                <div
-                    class="size-16 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center mb-4">
-                    <UIcon name="i-lucide-scroll-text" class="size-8 text-muted-foreground/50" />
-                </div>
-                <h3 class="font-semibold text-neutral-900 dark:text-neutral-100">No events logged</h3>
-                <p class="text-sm text-muted-foreground mt-1 px-8">Activity from your current session will appear here.
-                </p>
-            </div>
-        </template>
-    </UDrawer>
+    <LogsDrawer v-model:open="isDrawerOpen" namespace="clockify" />
 </template>

@@ -2,8 +2,8 @@ import { useStorage } from '@vueuse/core'
 
 import type { AppLog } from '~/types'
 
-export const useLogger = () => {
-    const logs = useStorage<AppLog[]>('app-logs', [])
+export const useLogger = (namespace: string = 'default') => {
+    const logs = useStorage<AppLog[]>(`app-logs-${namespace}`, [])
 
     const addLog = (message: string, level: 'info' | 'warn' | 'error' = 'info') => {
         const newLog: AppLog = {
