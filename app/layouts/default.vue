@@ -122,7 +122,7 @@ const headerActions = computed(() => {
             <template #header>
                 <div class="flex items-end gap-2.5">
                     <UIcon name="i-fluent-emoji-flat-toolbox" class="size-8 shrink-0" />
-                    <span class="font-black text-neutral-900 dark:text-white tracking-tight">Desk<span class="text-primary">Hub</span></span>
+                    <span v-if="!isCollapsed" class="font-black text-neutral-900 dark:text-white tracking-tight">Desk<span class="text-primary">Hub</span></span>
                 </div>
             </template>
 
